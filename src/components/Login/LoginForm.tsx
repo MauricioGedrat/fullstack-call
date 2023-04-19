@@ -1,5 +1,5 @@
-import React from "react";
-import { useForm } from "react-hook-form";
+import React, { useContext } from "react";
+import { FormProvider, SetValueConfig, useForm } from "react-hook-form";
 import {
   Button,
   PasswordInput,
@@ -15,9 +15,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ImgMock from "../../assets/mock-img.png";
 import { useMediaQuery } from "@mantine/hooks";
-import { useRouter } from "next/router";
 
-const registerFormShema = z.object({
+import { RegisterFormData } from "@/contexts/LoginContext";
+import { GlobalContext } from "@/contexts";
+
+export const registerFormShema = z.object({
   username: z
     .string()
     .min(3, "O usuário precisa ter no mínimo 3 letras")
@@ -27,8 +29,6 @@ const registerFormShema = z.object({
     .transform((username) => username.toLowerCase()),
   password: z.string().min(6, "A senha precisa ter no mínimo 3 caractéres"),
 });
-
-type RegisterFormData = z.infer<typeof registerFormShema>;
 
 const useStyles = createStyles(() => ({
   imageMock: {
@@ -40,21 +40,19 @@ const useStyles = createStyles(() => ({
 }));
 
 export const LoginForm = () => {
+  const { handleRegisterData } = useContext(GlobalContext);
   const { classes } = useStyles();
   const matches = useMediaQuery("(min-width: 800px)");
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<RegisterFormData>({
+  const methods = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormShema),
   });
-  const router = useRouter();
 
-  async function handleRegisterData(data: RegisterFormData) {
-    const { username } = data;
-    await router.push(`/register?username=${username}`);
-  }
+  const {
+    register,
+    formState: { errors, isSubmitting },
+    setValue,
+  } = methods;
+
   return (
     <Grid columns={matches ? 2 : 1} mt={100}>
       <Grid.Col span={1}>
@@ -63,40 +61,42 @@ export const LoginForm = () => {
           <span style={{ color: "orange" }}>rápidos</span> e <br />
           <span style={{ color: "orange" }}>precisos</span>
         </Title>
-        <form
-          onSubmit={handleSubmit(handleRegisterData)}
-          style={{ marginTop: "1rem", paddingRight: "30px" }}
-        >
-          <Box mb={10}>
-            <TextInput
-              {...register("username")}
-              placeholder="Your Username"
-              bg="dark"
-              c="orange"
-            />
-            <Text c={"red"} size={"sm"}>
-              {errors.username && <div>{errors.username.message}</div>}
-            </Text>
-          </Box>
-          <Box mb={10}>
-            <PasswordInput
-              {...register("password")}
-              placeholder="Your password"
-            />
-            <Text c={"red"} size={"sm"}>
-              {errors.password && <div>{errors.password.message}</div>}
-            </Text>
-          </Box>
-          <Button
-            type="submit"
-            variant="outline"
-            color="orange"
-            w="100px"
-            disabled={isSubmitting}
+        <FormProvider {...methods}>
+          <form
+            onSubmit={methods.handleSubmit(handleRegisterData)}
+            style={{ marginTop: "1rem", paddingRight: "30px" }}
           >
-            Enviar
-          </Button>
-        </form>
+            <Box mb={10}>
+              <TextInput
+                {...register("username")}
+                placeholder="Your Username"
+                bg="dark"
+                c="orange"
+              />
+              <Text c={"red"} size={"sm"}>
+                {errors.username && <div>{errors.username.message}</div>}
+              </Text>
+            </Box>
+            <Box mb={10}>
+              <PasswordInput
+                {...register("password")}
+                placeholder="Your password"
+              />
+              <Text c={"red"} size={"sm"}>
+                {errors.password && <div>{errors.password.message}</div>}
+              </Text>
+            </Box>
+            <Button
+              type="submit"
+              variant="outline"
+              color="orange"
+              w="100px"
+              disabled={isSubmitting}
+            >
+              Enviar
+            </Button>
+          </form>
+        </FormProvider>
       </Grid.Col>
       {matches && (
         <Grid.Col span={1}>

@@ -39,7 +39,11 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
+    "simple-peer": "^9.11.1",
     "typescript": "5.0.2",
     "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/simple-peer": "^9.11.5"
   }
 }
