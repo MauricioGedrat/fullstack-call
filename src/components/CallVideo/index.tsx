@@ -13,19 +13,20 @@ const VideoChat = () => {
     setCallId(Math.random().toString(36).substr(2, 9));
   }, []);
 
-  const startCall = () => {
+  const startCall = async () => {
     if (!stream) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: true })
-        .then((stream) => {
-          setStream(stream);
-          if (myVideoRef.current) {
-            myVideoRef.current.srcObject = stream;
-          }
-        })
-        .catch((err) => {
-          console.error("erro getUserMedia", err);
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
         });
+        setStream(stream);
+        if (myVideoRef.current) {
+          myVideoRef.current.srcObject = stream;
+        }
+      } catch (err) {
+        console.error("erro getUserMedia", err);
+      }
     }
 
     const p = new Peer({
