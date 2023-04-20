@@ -1,10 +1,22 @@
-import { Avatar, Button, Group, HoverCard, Text } from "@mantine/core";
+import {
+  Avatar,
+  Button,
+  FileButton,
+  Group,
+  HoverCard,
+  Image,
+  Text,
+} from "@mantine/core";
+
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useRef, useState } from "react";
 
 export const UserProfile = () => {
   const router = useRouter();
   const username = router.query.username;
+  const [file, setFile] = useState<File | null>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   return (
     <Group position="right">
       <HoverCard width={280} shadow="xl">

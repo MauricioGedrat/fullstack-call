@@ -2,7 +2,6 @@ import React, { createContext, ReactNode, useState } from "react";
 import { HeaderContextProvider } from "./HeaderContext";
 import { LoginContextProvider, RegisterFormData } from "./LoginContext";
 import { useRouter } from "next/router";
-import { string } from "zod";
 
 interface ContextProps {
   children: ReactNode;

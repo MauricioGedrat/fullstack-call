@@ -8,18 +8,7 @@ export const Sidebar = () => {
   return (
     <Navbar width={{ sm: 300 }}>
       <UserProfile />
-      <Container>
-        <form
-          style={{
-            display: "flex",
-            flexDirection: matches ? "row" : "column",
-            marginTop: "10px",
-          }}
-        >
-          <Input type="text" />
-          <Button>Entrar</Button>
-        </form>
-      </Container>
+      <Container></Container>
     </Navbar>
   );
 };
